@@ -1,34 +1,39 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import { AudioRecorder } from "react-audio-voice-recorder";
 
 function App() {
-	const [count, setCount] = useState(0);
+	const addAudioElement = (blob: Blob) => {
+		const url = URL.createObjectURL(blob);
+		const audio = document.createElement("audio");
+		audio.src = url;
+		audio.controls = true;
+		document.body.appendChild(audio);
+	};
 
 	return (
-		<>
-			<div>
-				<a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank" rel="noreferrer">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-			</div>
-			<h1>Vite + React</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMRTEST
-				</p>
-			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
-		</>
+		<div>
+			<AudioRecorder
+				onRecordingComplete={addAudioElement}
+				audioTrackConstraints={{
+					noiseSuppression: true,
+					echoCancellation: true,
+					// autoGainControl,
+					// channelCount,
+					// deviceId,
+					// groupId,
+					// sampleRate,
+					// sampleSize,
+				}}
+				onNotAllowedOrFound={(err) => console.table(err)}
+				downloadOnSavePress={true}
+				downloadFileExtension="webm"
+				mediaRecorderOptions={{
+					audioBitsPerSecond: 128000,
+				}}
+				// showVisualizer={true}
+			/>
+			<br />
+		</div>
 	);
 }
 
